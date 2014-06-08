@@ -1,6 +1,5 @@
-﻿using Colour;
+﻿using JAZS;
 using UnityEngine;
-using System.IO;
 using System.Collections;
 
 public class Monster : MonoBehaviour {
@@ -20,7 +19,7 @@ public class Monster : MonoBehaviour {
    public int height = 128;
    public int center = 64;
    
-   bool post = true;
+   bool publicTest = true;
    
    // Use this for initialization
    void Start () 
@@ -32,7 +31,19 @@ public class Monster : MonoBehaviour {
       this.clear();
       this.setCharacteristics(16, Random.Range(8,16));
       this.Draw();
-      this.postImage();
+      this.post();
+   }
+   
+   void post()
+   {
+      if(this.publicTest)
+      {
+         Media.postImage(
+            "http://www.zacpez.com/bitmapmaniac/upup.php?post",
+            "file",
+            this.texture.EncodeToPNG()
+         );
+      }
    }
    
    void clear ()
@@ -46,31 +57,9 @@ public class Monster : MonoBehaviour {
       }
    }
    
-   void postImage () {
-      if(post)
-      {
-         var bytes = this.texture.EncodeToPNG();
-         var form = new WWWForm();
-         
-         form.AddBinaryData("file", bytes, System.DateTime.UtcNow.ToString()+".png", "images/png");
-         var www = new WWW("http://www.zacpez.com/bitmapmaniac/upup.php?post", form);
-         
-         while (!www.isDone) { }
-         
-         if (www.error != null) 
-         {
-            print(www.error);
-         } 
-         else 
-         {
-            print (www.text);
-         }
-      }
-   }
-   
    void setCharacteristics (int scale, int complexity) 
    {
-      background = Colour.Colour.randomColour(false);
+      background = Colour.randomColour(false);
       
       float angleComplex = ((360 / complexity) * Mathf.PI) / 180;
       verts = new Vector2[complexity];
@@ -205,7 +194,7 @@ public class Monster : MonoBehaviour {
          sourceColor.b + plusminus(spread),
          sourceColor.a + plusminus(spread)
       );
-      return Colour.Colour.quantize(result);
+      return Colour.quantize(result);
    }
    
    // Update is called once per frame
@@ -216,7 +205,7 @@ public class Monster : MonoBehaviour {
          this.clear ();
          this.setCharacteristics(16, Random.Range(8,16));
          this.Draw();
-         this.postImage();
+         this.post();
          deltaTime = 0;
       }
       ++deltaTime;
