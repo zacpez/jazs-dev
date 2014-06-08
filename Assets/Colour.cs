@@ -52,6 +52,21 @@ namespace JAZS
          
       }
       
+      public static Color randomColor (Color sourceColor, float spread, bool alpha)
+      {
+
+         sourceColor.r += Math.plusminus(spread);
+         sourceColor.g += Math.plusminus(spread);
+         sourceColor.b += Math.plusminus(spread);
+         
+         if(alpha)
+         {
+            sourceColor.a += Math.plusminus(spread);
+         }
+
+         return quantize(sourceColor);
+      }
+      
       public static Color randomColour (float r, float g, float b, float a)
       {
          Color result = new Color(r,g,b,a);

@@ -8,8 +8,6 @@ public class Monster : MonoBehaviour {
    
    SpriteRenderer bitmap;
    Texture2D texture;
-   Color White = new Color(1f, 1f, 1f, 1f);
-   Color Clear = new Color(0f, 0f, 0f, 0f);
    Color foreground = new Color(0f, 0f, 0f, 1f);
    Color background;
    
@@ -19,7 +17,7 @@ public class Monster : MonoBehaviour {
    public int height = 128;
    public int center = 64;
    
-   bool publicTest = true;
+   bool publicTest = false;
    
    // Use this for initialization
    void Start () 
@@ -28,7 +26,7 @@ public class Monster : MonoBehaviour {
       this.texture.filterMode = FilterMode.Point;
       this.texture.wrapMode = TextureWrapMode.Clamp;
       
-      this.clear();
+      Paint.clear(texture, 0, 0, width, height);
       this.setCharacteristics(16, Random.Range(8,16));
       this.Draw();
       this.post();
@@ -43,17 +41,6 @@ public class Monster : MonoBehaviour {
             "file",
             this.texture.EncodeToPNG()
          );
-      }
-   }
-   
-   void clear ()
-   {
-      for(int x = 0; x < width; x++)
-      {
-         for(int y = 0; y < height; y++)
-         {
-            texture.SetPixel(x,y,Clear);
-         }
       }
    }
    
@@ -86,60 +73,17 @@ public class Monster : MonoBehaviour {
       int i = 1;
       for(i = 1; i < verts.Length; i++)
       {
-         this.DrawLine(texture, (int)verts[i-1].x, (int)verts[i-1].y, (int)verts[i].x, (int)verts[i].y, foreground);
+         Paint.DrawLine(texture, (int)verts[i-1].x, (int)verts[i-1].y, (int)verts[i].x, (int)verts[i].y, foreground);
       }
+      Paint.DrawLine(texture, (int)verts[0].x, (int)verts[0].y, (int)verts[i-1].x, (int)verts[i-1].y, foreground);
       
-      this.DrawLine(texture, (int)verts[0].x, (int)verts[0].y, (int)verts[i-1].x, (int)verts[i-1].y, foreground);
-      this.FloodFill(interior[0], interior[1], texture.GetPixel(interior[0], interior[1]));
+      Paint.FloodFill(texture, interior[0], interior[1], texture.GetPixel(interior[0], interior[1]), background);
       this.addEye();
       
       this.texture.Apply();
       this.bitmap = GetComponent<SpriteRenderer>();
       this.bitmap.sprite = Sprite.Create(texture, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f));
-   }
-   
-   // Borrowed from Unity Wiki
-   void DrawLine (Texture2D tex, int x0, int y0, int x1, int y1, Color col)
-   {
-      int dy = (int)(y1-y0);
-      int dx = (int)(x1-x0);
-      int stepx, stepy;
-      
-      if (dy < 0) {dy = -dy; stepy = -1;}
-      else {stepy = 1;}
-      if (dx < 0) {dx = -dx; stepx = -1;}
-      else {stepx = 1;}
-      dy <<= 1;
-      dx <<= 1;
-      
-      float fraction = 0;
-      
-      tex.SetPixel(x0, y0, col);
-      if (dx > dy) {
-         fraction = dy - (dx >> 1);
-         while (Mathf.Abs(x0 - x1) > 1) {
-            if (fraction >= 0) {
-               y0 += stepy;
-               fraction -= dx;
-            }
-            x0 += stepx;
-            fraction += dy;
-            tex.SetPixel(x0, y0, col);
-         }
-      }
-      else {
-         fraction = dx - (dy >> 1);
-         while (Mathf.Abs(y0 - y1) > 1) {
-            if (fraction >= 0) {
-               x0 += stepx;
-               fraction -= dy;
-            }
-            y0 += stepy;
-            fraction += dx;
-            tex.SetPixel(x0, y0, col);
-         }
-      }
-   }
+   }  
    
    // WIP
    void addEye ()
@@ -155,54 +99,13 @@ public class Monster : MonoBehaviour {
       texture.SetPixel(interior[0]-1, interior[1]-1, new Color(1f,1f,1f,1f));
    }
    
-   void FloodFill (int x, int y, Color targetColor) 
-   {
-      Color looking = texture.GetPixel(x,y);
-      
-      if (foreground == looking)
-      {
-         return;
-      }
-      if (targetColor != looking)
-      {
-         return;
-      } 
-      else 
-      {
-         // Skin colour variation
-         texture.SetPixel(x, y, this.randomColor(background, 0.5f));
-      }
-      
-      this.FloodFill(x+1, y, targetColor);
-      this.FloodFill(x-1, y, targetColor);
-      this.FloodFill(x, y+1, targetColor);
-      this.FloodFill(x, y-1, targetColor);
-      return;
-   }
-   
-   
-   float plusminus (float spread)
-   {
-      return -(spread/2) + Random.Range(0f, spread);
-   }
-   
-   Color randomColor (Color sourceColor, float spread)
-   {
-      Color result = new Color(
-         sourceColor.r + plusminus(spread),
-         sourceColor.g + plusminus(spread),
-         sourceColor.b + plusminus(spread),
-         sourceColor.a + plusminus(spread)
-      );
-      return Colour.quantize(result);
-   }
    
    // Update is called once per frame
    void Update () 
    {
       if(300 < deltaTime)
       {
-         this.clear ();
+         Paint.clear(texture, 0, 0, width, height);
          this.setCharacteristics(16, Random.Range(8,16));
          this.Draw();
          this.post();
