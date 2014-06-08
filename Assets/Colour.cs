@@ -48,20 +48,19 @@ namespace Colour
                break;
             
          }
-         quantize(result);
-         return result;
+         return quantize(result);
+         
       }
       
       public static Color randomColour (float r, float g, float b, float a)
       {
          Color result = new Color(r,g,b,a);
-         quantize (result);
-         return result;
+         return quantize(result);
       }
       
       public static Color Lerp (Color c1, Color c2, float time)
       {
-         return quantize(Color.Lerp (c1,c2,time));
+         return quantize(Color.Lerp (c1, c2, time));
       }
       
       public static Color sub (Color c1, Color c2) 
@@ -112,6 +111,7 @@ namespace Colour
          }
          return result;
       }
+      
       public static Color mix (Color c1, float divisor, MixType mixType)
       {
          Color result;
