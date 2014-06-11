@@ -26,17 +26,17 @@ public class Monster : MonoBehaviour {
       this.texture.filterMode = FilterMode.Point;
       this.texture.wrapMode = TextureWrapMode.Clamp;
       
-      Paint.clear(texture, 0, 0, width, height);
-      this.setCharacteristics(16, Random.Range(8,16));
+      Paint.Clear(texture, 0, 0, width, height);
+      this.SetCharacteristics(16, Random.Range(8,16));
       this.Draw();
-      this.post();
+      this.Post();
    }
    
-   void post()
+   void Post()
    {
       if(this.publicTest)
       {
-         Media.postImage(
+         Media.PostImage(
             "http://www.zacpez.com/bitmapmaniac/upup.php?post",
             "file",
             this.texture.EncodeToPNG()
@@ -44,9 +44,9 @@ public class Monster : MonoBehaviour {
       }
    }
    
-   void setCharacteristics (int scale, int complexity) 
+   void SetCharacteristics (int scale, int complexity) 
    {
-      background = Colour.randomColour(false);
+      background = Colour.RandomColour(false);
       
       float angleComplex = ((360 / complexity) * Mathf.PI) / 180;
       verts = new Vector2[complexity];
@@ -105,10 +105,10 @@ public class Monster : MonoBehaviour {
    {
       if(300 < deltaTime)
       {
-         Paint.clear(texture, 0, 0, width, height);
-         this.setCharacteristics(16, Random.Range(8,16));
+         Paint.Clear(texture, 0, 0, width, height);
+         this.SetCharacteristics(16, Random.Range(8,16));
          this.Draw();
-         this.post();
+         this.Post();
          deltaTime = 0;
       }
       ++deltaTime;

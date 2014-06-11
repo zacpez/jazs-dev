@@ -15,13 +15,13 @@ namespace JAZS
          dataBlock = new Dictionary<string, Color[]>();
       }
       
-      public static void clear (Texture2D texture, int x, int y, int w, int h)
+      public static void Clear (Texture2D texture, int x, int y, int w, int h)
       {
          for(int dx = x; dx < w; dx++)
          {
             for(int dy = y; dy < h; dy++)
             {
-               texture.SetPixel(x, y, Color.clear);
+               texture.SetPixel(dx, dy, Color.clear);
             }
          }
       }
@@ -84,7 +84,7 @@ namespace JAZS
          else 
          {
             // Skin colour variation
-            texture.SetPixel(x, y, Colour.randomColor(paint, 0.5f, false));
+            texture.SetPixel(x, y, Colour.RandomColor(paint, 0.5f, false));
          }
          
          FloodFill(texture, x+1, y, targetColor, paint);
@@ -94,13 +94,19 @@ namespace JAZS
          return;
       }
       
-      public bool setItem (string key, Color[] value)
+      public static Texture2D Flatten (Texture2D bottom, Texture2D top, int x, int y)
+      {
+         bottom.SetPixels(x, y, top.width, top.height, top.GetPixels());
+         return bottom;
+      }
+      
+      public bool SetItem (string key, Color[] value)
       {
          dataBlock[key] = value;
          return true;
       }
      
-      public Color[] getItem (string key)
+      public Color[] GetItem (string key)
       {
          if(dataBlock.ContainsKey(key))
          {

@@ -14,7 +14,7 @@ namespace JAZS
          divide
       }
       
-      public static Color quantize (Color input)
+      public static Color Quantize (Color input)
       {
          input.r = (input.r * quantum) / quantum;
          input.g = (input.g * quantum) / quantum;
@@ -23,7 +23,7 @@ namespace JAZS
          return input;
       }
             
-      public static Color randomColour (bool alpha)
+      public static Color RandomColour (bool alpha)
       {
          Color result;
          switch(alpha)
@@ -48,93 +48,93 @@ namespace JAZS
                break;
             
          }
-         return quantize(result);
-         
+         return Quantize(result);
       }
       
-      public static Color randomColor (Color sourceColor, float spread, bool alpha)
+      public static Color RandomColor (Color sourceColor, float spread, bool alpha)
       {
-
-         sourceColor.r += Math.plusminus(spread);
-         sourceColor.g += Math.plusminus(spread);
-         sourceColor.b += Math.plusminus(spread);
+         sourceColor.r += Math.PlusMinus(spread);
+         sourceColor.g += Math.PlusMinus(spread);
+         sourceColor.b += Math.PlusMinus(spread);
          
          if(alpha)
          {
-            sourceColor.a += Math.plusminus(spread);
+            sourceColor.a += Math.PlusMinus(spread);
          }
 
-         return quantize(sourceColor);
+         return Quantize(sourceColor);
       }
       
-      public static Color randomColour (float r, float g, float b, float a)
+      public static Color RandomColour (float r, float g, float b, float a)
       {
          Color result = new Color(r,g,b,a);
-         return quantize(result);
+         return Quantize(result);
       }
       
       public static Color Lerp (Color c1, Color c2, float time)
       {
-         return quantize(Color.Lerp (c1, c2, time));
+         return Quantize(Color.Lerp (c1, c2, time));
       }
       
-      public static Color sub (Color c1, Color c2) 
+      public static Color Sub (Color c1, Color c2) 
       {
-         return quantize(c1 - c2);
+         return Quantize(c1 - c2);
       }
       
-      public static Color add (Color c1, Color c2) 
+      public static Color Add (Color c1, Color c2) 
       {
-         return quantize(c1 + c2);
+         return Quantize(c1 + c2);
       }
       
-      public static Color multiply (Color c1, Color c2) 
+      public static Color Multiply (Color c1, Color c2) 
       {
-         return quantize(c1 * c2);
+         return Quantize(c1 * c2);
       }
       
-      public static Color divide (Color c1, float divisor) 
+      public static Color Divide (Color c1, float divisor) 
       {
-         return quantize(c1 / divisor);
+         return Quantize(c1 / divisor);
       }
       
       // This is almost redundant, but more mix types can be added
-      public static Color mix (Color c1, Color c2, MixType mixType)
+      public static Color Mix (Color c1, Color c2, MixType mixType)
       {
          Color result;
          switch (mixType)
          {
             case MixType.average:
-               result = divide(add (c1, c2), 2);
+               result = Divide(Add (c1, c2), 2);
                break;
                
             case MixType.subtractive:
-               result = sub(c1, c2);
+               result = Sub(c1, c2);
                break;
                
             case MixType.additive:
-               result = add(c1, c2);
+               result = Add(c1, c2);
                break;
                
             case MixType.multiply:
-               result = multiply(c1, c2);
+               result = Multiply(c1, c2);
                break;
             
             default: 
-               result = divide(add (c1, c2), 2);;
+               result = Divide(Add (c1, c2), 2);;
                break;
          }
          return result;
       }
       
-      public static Color mix (Color c1, float divisor, MixType mixType)
+      public static Color Mix (Color c1, float divisor, MixType mixType)
       {
          Color result;
          if (mixType == MixType.divide) 
          {
-            result = divide(c1, divisor);
-         } else {
-            result = quantize(c1);
+            result = Divide(c1, divisor);
+         } 
+         else 
+         {
+            result = Quantize(c1);
          }
          return result;
       }
