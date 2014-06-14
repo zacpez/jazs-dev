@@ -1,6 +1,7 @@
 ﻿using JAZS;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Monster : MonoBehaviour {
    
@@ -8,10 +9,9 @@ public class Monster : MonoBehaviour {
    
    SpriteRenderer bitmap;
    Texture2D texture;
-   Color foreground = new Color(0f, 0f, 0f, 1f);
-   Color background;
+   Color skinColour;
    
-   Vector2[] verts;
+   List<Vector2> verts;
    int[] interior = new int[2];
    public int width = 128;
    public int height = 128;
@@ -46,38 +46,37 @@ public class Monster : MonoBehaviour {
    
    void SetCharacteristics (int scale, int complexity) 
    {
-      background = Colour.RandomColour(false);
+      skinColour = Colour.RandomColour(false);
       
       float angleComplex = ((360 / complexity) * Mathf.PI) / 180;
-      verts = new Vector2[complexity];
+      verts = new List<Vector2>();
       
       int i;
       for(i = 0; i < complexity; i++) 
       {
          float x = center + Mathf.Cos(angleComplex*i) * (scale*Random.Range(0f,1.5f));
          float y = center + Mathf.Sin(angleComplex*i) * (scale*Random.Range(0f,1.5f));
-         verts[i] = new Vector2(x,y);
+         verts.Add(new Vector2(x,y));
          interior[0] += (int)x;
          interior[1] += (int)y;
       }
-      // Next two lines are hacked in to fix half-expected gap
-      verts[i-1].x = verts[0].x;
-      verts[i-1].y = verts[0].y;
+      // Snap together the head and tail
+      verts[i-1] = verts[0];
       
-      interior[0] /= verts.Length;
-      interior[1] /= verts.Length;
+      interior[0] /= verts.Count;
+      interior[1] /= verts.Count;
    }
    
    void Draw () 
    {
       int i = 1;
-      for(i = 1; i < verts.Length; i++)
+      for(i = 1; i < verts.Count; i++)
       {
-         Paint.DrawLine(texture, (int)verts[i-1].x, (int)verts[i-1].y, (int)verts[i].x, (int)verts[i].y, foreground);
+         Paint.DrawLine(texture, (int)verts[i-1].x, (int)verts[i-1].y, (int)verts[i].x, (int)verts[i].y, Color.black);
       }
-      Paint.DrawLine(texture, (int)verts[0].x, (int)verts[0].y, (int)verts[i-1].x, (int)verts[i-1].y, foreground);
+      Paint.DrawLine(texture, (int)verts[0].x, (int)verts[0].y, (int)verts[i-1].x, (int)verts[i-1].y, Color.black);
       
-      Paint.FloodFill(texture, interior[0], interior[1], texture.GetPixel(interior[0], interior[1]), background);
+      Paint.FloodFill(texture, interior[0], interior[1], texture.GetPixel(interior[0], interior[1]), skinColour);
       this.addEye();
       
       this.texture.Apply();
